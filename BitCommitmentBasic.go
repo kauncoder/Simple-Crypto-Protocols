@@ -29,25 +29,25 @@ func IsSender(p *big.Int,g *big.Int, c chan *big.Int) {
     b:=bigzero
     //generate random value k
     k,_:=GenerateSecret(p)
-    //calcualte f(k)
+    //calcualte f(k) (the one-way function output)
     f:=new(big.Int).Exp(g, k, p)
-    //calcualte h(k)
+    //calcualte h(k) (the hardcore predicate output)
     h:=new(big.Int).Mod(k,bigtwo)
-    hb:=new(big.Int).Xor(h,b)
+    hxorb:=new(big.Int).Xor(h,b)
     fmt.Println("sender committed",b)
-    Commit(f,hb,c)
+    Commit(f,hxorb,c)
     Reveal(k,c)
     
 }
 
-func Commit(f *big.Int,hb *big.Int, c chan *big.Int) {
+func Commit(f *big.Int,hxorb *big.Int, c chan *big.Int) {
     //commit values to Receiver
     c <- f
-    c <- hb   
+    c <- hxorb   
 }
 
-func Reveal(b *big.Int, c chan *big.Int) {
-    c <- b
+func Reveal(k *big.Int, c chan *big.Int) {
+    c <- k
 }
 
 
@@ -57,17 +57,17 @@ func IsReceiver (p *big.Int,g *big.Int,c chan *big.Int) {
     b:=bigtwo //initializing value with anything other than 0 o 1
     //receives the values of f and hb from sender
     f:= <- c 
-    hb:= <-c
+    hxorb:= <-c
     //waits for reveal
     k:= <-c
     //check if value of OWF is right
-    fc:=new(big.Int).Exp(g, k, p) 
-    hc:=new(big.Int).Mod(k,bigtwo)
+    fcalc:=new(big.Int).Exp(g, k, p) 
+    hxorbCalc:=new(big.Int).Mod(k,bigtwo)
     
-    if fc.Cmp(f)!=0 {
+    if fcalc.Cmp(f)!=0 {
         fmt.Println("cheating sender detected")
     } else {    //calculate h(k) and extract b
-        b=new(big.Int).Xor(hb,hc)
+        b=new(big.Int).Xor(hxorb,hxorbCalc)
         fmt.Println("receiver revealed",b)
     }
 }
