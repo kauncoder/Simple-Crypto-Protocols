@@ -21,7 +21,7 @@ var bigtwo = big.NewInt(2)
 
 func main() {
     
-    g:=bigtwo
+    g:=FindGenerator()
     p,_:=SafePrime()
     s,_:=GenerateSecret(p)
     h:=new(big.Int).Exp(g,s,p) //choosing h as g^s
@@ -44,7 +44,7 @@ func IsSender(p *big.Int,g *big.Int,h *big.Int, c chan *big.Int) {
     gm:=new(big.Int).Exp(g, m, p)
     gb:=new(big.Int).Mul(hr,gm)
     commit:=new(big.Int).Mod(gb,p)
-    fmt.Println("sender committed via Pedersen",m)
+    fmt.Println("sender committed: ",m)
     Commit(commit,c)
     Reveal(m,r,c)
     
@@ -79,7 +79,7 @@ func IsReceiver (p *big.Int,g *big.Int,h *big.Int,c chan *big.Int) {
     if commitcalc.Cmp(commit)!=0 {
         fmt.Println("cheating sender detected")
     } else {
-        fmt.Println("receiver was revealed",msgreveal)
+        fmt.Println("receiver was revealed: ",msgreveal)
     }
 }
 
