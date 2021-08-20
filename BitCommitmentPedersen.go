@@ -42,21 +42,24 @@ func IsSender(p *big.Int,g *big.Int,h *big.Int, c chan *big.Int) {
     hr:=new(big.Int).Exp(h, r, p)
     //calcualte g^b
     gm:=new(big.Int).Exp(g, m, p)
-    gb:=new(big.Int).Mul(hr,gm)
-    commit:=new(big.Int).Mod(gb,p)
+    //calculating commitment
+    commit:=new(big.Int).Mul(hr,gm)
+    commit=new(big.Int).Mod(commit,p)
     fmt.Println("sender committed: ",m)
+    //committed to Receiver
     Commit(commit,c)
+    //revealed to Recevier
     Reveal(m,r,c)
     
 }
 
 func Commit(commit *big.Int, c chan *big.Int) {
-    //commit values to Receiver
+    
     c <- commit
-    //c <- hxorb  
 }
 
 func Reveal(m *big.Int, r *big.Int, c chan *big.Int) {
+    
     c <- m
     c <- r
 }
@@ -65,17 +68,17 @@ func Reveal(m *big.Int, r *big.Int, c chan *big.Int) {
 //Receiver function that checks and extracts committed value 
 func IsReceiver (p *big.Int,g *big.Int,h *big.Int,c chan *big.Int) {
 
-    //receives the values of f and hb from sender
+    //receives the commitment value from Sender
     commit:= <- c 
     //waits for reveal
     msgreveal:= <- c
     randomreveal:= <- c
-    //check values
-    hrcalc:= new(big.Int).Exp(h, randomreveal, p) //caclucalte h^r
+    //calculate values
+    hrcalc:= new(big.Int).Exp(h, randomreveal, p) //calculate h^r
     gmcalc:= new(big.Int).Exp(g,msgreveal,p)    //calcualte g^m
     commitcalc:= new(big.Int).Mul(hrcalc,gmcalc)   //getting h^r.g^m
     commitcalc= new(big.Int).Mod(commitcalc,p)  //modding with p
-    
+    //verifying commitment value
     if commitcalc.Cmp(commit)!=0 {
         fmt.Println("cheating sender detected")
     } else {
@@ -84,7 +87,7 @@ func IsReceiver (p *big.Int,g *big.Int,h *big.Int,c chan *big.Int) {
 }
 
 func SafePrime() (*big.Int,error) {
-//find prime p = 2q+1 st q is also a suitable prime   
+//find prime p = 2q+1 such that q is also a suitable prime   
 //keep generating random primes till p=2q+1 is satisfied
     p:=new(big.Int)
     for {
