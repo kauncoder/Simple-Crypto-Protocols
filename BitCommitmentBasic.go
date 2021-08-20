@@ -7,7 +7,7 @@ import (
     "time"
     )
 
-var bits int = 32 //tested upto 2048
+var bits int = 256 //tested upto 2048
 var bigzero = big.NewInt(0)
 var bigone = big.NewInt(1)
 var bigtwo = big.NewInt(2)
