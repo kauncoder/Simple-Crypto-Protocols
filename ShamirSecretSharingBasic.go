@@ -6,7 +6,7 @@ import (
     "math/big"
     )
 
-var bits int = 32
+var bits int = 256
 var n int = 5  // (n is the total shares to be generated)
 var t int = 3  // (t is threshold for reconstructing secret)
 
