@@ -1,3 +1,7 @@
+/*
+The most basic bit commitment protocol
+It commits a single bit value {0,1} with computational hiding and prefect binding
+*/
 package main
 
 import (
