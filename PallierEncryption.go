@@ -28,7 +28,7 @@ func main() {
     fmt.Println("original plaintext:",msg,"\nciphertext:",cipher,"\ndecrypted plaintext:",messg)
     //test additive homomorphism
     TestAdditiveHomomorphism(n,g,L,M)
-    //test scalar multiplication
+    //test Plaintext multiplication
     TestPlaintextMultiplication(n,g,L,M)
     
 }
