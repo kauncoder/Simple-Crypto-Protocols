@@ -4,4 +4,5 @@ The main inspiration for this was (is?) the lack of content to bridge the gap be
 This is therefore strictly meant to be material for self-study and <b> not for use in production </b> (and preferably, even for a demo for some school project :P)
 Incidentally, this also happens to be a good showcase for Go langauge and its applications in cryptography.
 I hope this helps people get more involved in the beautiful beautiful field of cryptography.
-Languages used: Go and Rust
+Languages used: Go & Rust
+
